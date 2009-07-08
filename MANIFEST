@@ -1,0 +1,10 @@
+Changes
+lib/Net/Google/Tasks.pm
+lib/Net/Google/Tasks/Fetcher.pm
+lib/Net/Google/Tasks/List.pm
+lib/Net/Google/Tasks/Task.pm
+main.pl
+Makefile.PL
+MANIFEST
+README
+t/Net-Google-Tasks.t

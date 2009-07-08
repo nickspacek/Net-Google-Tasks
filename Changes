@@ -1,0 +1,6 @@
+Revision history for Perl extension Net::Google::Tasks.
+
+0.01  Wed Jul  8 11:54:57 2009
+	- original version; created by h2xs 1.23 with options
+		-AX Net::Google::Tasks
+
