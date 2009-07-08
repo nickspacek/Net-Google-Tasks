@@ -1,5 +1,15 @@
 package Net::Google::Tasks::Task;
 
+=head1 NAME
+
+Net::Google::Tasks::Task - Contains Task data.
+
+=head1 DESCRIPTION
+
+This class provides storage of task data.
+
+=cut
+
 use Moose;
 
 has 'id' => (
@@ -46,14 +56,18 @@ has '_deleted' => (
 	default => 0
 );
 
-=pod
-"creation_date": "",
-            "id": "01723986328272461292:0:1",
-            "archived": false,
-            "name": "gran torino",
-            "list_id": ["01723986328272461292:0:0"],
-            "deleted": false,
-            "completed": false
+=head1 AUTHOR
+
+Nick Spacek, E<lt>nick.spacek@gmail.comE<gt>
+
+=head1 COPYRIGHT AND LICENSE
+
+Copyright (C) 2009 by Nick Spacek
+
+This library is free software; you can redistribute it and/or modify
+it under the same terms as Perl itself, either Perl version 5.10.0 or,
+at your option, any later version of Perl 5 you may have available.
+
 =cut
 
 1;

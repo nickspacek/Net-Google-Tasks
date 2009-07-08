@@ -1,5 +1,16 @@
 package Net::Google::Tasks::Fetcher::Request;
 
+=head1 NAME
+
+Net::Google::Tasks::Fetcher::Request - Logic to create specific requests.
+
+=head1 DESCRIPTION
+
+This module deals with creating the correct requests for supported
+operations.
+
+=cut
+
 use strict;
 use warnings;
 
@@ -43,6 +54,19 @@ sub _base_request {
 		Content => $params;
 }
 
+=head1 AUTHOR
+
+Nick Spacek, E<lt>nick.spacek@gmail.comE<gt>
+
+=head1 COPYRIGHT AND LICENSE
+
+Copyright (C) 2009 by Nick Spacek
+
+This library is free software; you can redistribute it and/or modify
+it under the same terms as Perl itself, either Perl version 5.10.0 or,
+at your option, any later version of Perl 5 you may have available.
+
+=cut
 
 1;
 

@@ -1,5 +1,16 @@
 package Net::Google::Tasks::Fetcher;
 
+=head1 NAME
+
+Net::Google::Tasks::Fetcher - Manages a connection to Google Tasks.
+
+=head1 DESCRIPTION
+
+This module handles the interaction with Google Tasks, using HTTP::Requests
+and parsing HTTP::Responses for JSON information.
+
+=cut
+
 use Moose;
 
 use LWP;
@@ -57,6 +68,21 @@ has '_ua' => (
 	builder => '_build_useragent'
 );
 
+=head1 METHODS
+
+=head2 connect
+
+Perform the initial connect:
+
+=over
+=item GET the base page (usually http://mail.google.com/tasks/ig)
+=item Process the login form here.
+=item Handles the redirects.
+=item Parse the final page and the JSON.
+=back
+
+=cut
+
 sub connect {
 	my ( $self ) = @_;
 	
@@ -111,11 +137,29 @@ sub connect {
 	}
 }
 
+=head2 request_lists
+
+(Should) perform a request to retrieve the lists (currently uses the lists
+from the initial page, which means it never gets updated).
+
+Returns a reference to an array straight from the decoded JSON.
+
+=cut
+
 sub request_lists {
 	my ( $self ) = @_;
 	# TODO: Have some POST request logic
 	return $self->_initial_json->{ t }->{ lists };
 }
+
+=head2 request_update_list( $list_obj )
+
+Perform a request to update the list, given a List object.
+
+(Originally I intended the Fetcher to be apart from the List and Task
+objects and only deal with the JSON. Not sure what to do.)
+
+=cut
 
 sub request_update_list {
 	my ( $self, $list ) = @_;
@@ -130,6 +174,14 @@ sub request_update_list {
 
 	return 1;
 }
+
+=head2 request_tasks_for_list
+
+Perform a request to retrieve the tasks for a list, given the list ID.
+
+Returns a reference to an array straight from the decoded JSON.
+
+=cut
 
 sub request_tasks_for_list {
 	my ( $self, $list_id ) = @_;
@@ -166,6 +218,20 @@ sub _make_request {
 	
 	return $res;
 }
+
+=head1 AUTHOR
+
+Nick Spacek, E<lt>nick.spacek@gmail.comE<gt>
+
+=head1 COPYRIGHT AND LICENSE
+
+Copyright (C) 2009 by Nick Spacek
+
+This library is free software; you can redistribute it and/or modify
+it under the same terms as Perl itself, either Perl version 5.10.0 or,
+at your option, any later version of Perl 5 you may have available.
+
+=cut
 
 1;
 

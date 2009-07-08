@@ -2,8 +2,7 @@ package Net::Google::Tasks;
 
 =head1 NAME
 
-Net::Google::Tasks - Perl extension for retrieving tasks from Google
-Tasks
+Net::Google::Tasks - Provides a basic API for Google Tasks.
 
 =head1 SYNOPSIS
 
@@ -14,10 +13,9 @@ Tasks
 		password => 'password'
 	);
 	
-	$t->connect;
+	$t->connect; # must be connected to call any method
 	my $lists = $t->get_lists;
-	my $tasks = $t->get_tasks( $lists->[0] );
-
+	my $tasks = $t->get_tasks_for_list( $lists->[0] );
 
 =head1 DESCRIPTION
 
@@ -60,6 +58,14 @@ has '_fetcher' => (
 	}
 );
 
+=head1 METHODS
+
+=head2 get_lists
+
+Retrieves a reference to an array of List objects.
+
+=cut
+
 sub get_lists {
 	my $self = shift;
 
@@ -71,6 +77,12 @@ sub get_lists {
 	my @lists = map { _build_list( $_ ) } @{ $arr };
 	return \@lists;
 }
+
+=head2 get_tasks_for_list( $list_obj )
+
+Retrieves a reference to an array of Task objects for the given list.
+
+=cut
 
 sub get_tasks_for_list {
 	my ( $self, $list ) = @_;
@@ -84,6 +96,12 @@ sub get_tasks_for_list {
 	my @tasks = map { _build_task( $_ ) } @{ $res };
 	return \@tasks;
 }
+
+=head2 update_list( $list_obj )
+
+Saves any changes to an existing list (currently only saves the name).
+
+=cut
 
 sub update_list {
 	my ( $self, $list ) = @_;
@@ -135,8 +153,6 @@ sub _is_true {
 	return shift == JSON::XS::true ? 1 : 0;
 }
 
-=head1 SEE ALSO
-
 =head1 AUTHOR
 
 Nick Spacek, E<lt>nick.spacek@gmail.comE<gt>
@@ -148,7 +164,6 @@ Copyright (C) 2009 by Nick Spacek
 This library is free software; you can redistribute it and/or modify
 it under the same terms as Perl itself, either Perl version 5.10.0 or,
 at your option, any later version of Perl 5 you may have available.
-
 
 =cut
 
