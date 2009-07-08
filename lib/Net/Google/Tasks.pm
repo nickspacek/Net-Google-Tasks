@@ -72,10 +72,10 @@ sub get_lists {
 	return \@lists;
 }
 
-sub get_tasks {
+sub get_tasks_for_list {
 	my ( $self, $list ) = @_;
 	
-	die 'No list specified' unless $list;
+	die 'No list specified.' unless $list;
 	die 'Not connected.' unless $self->connected;
 	
 	my $fetcher = $self->_fetcher;
@@ -83,6 +83,18 @@ sub get_tasks {
 	
 	my @tasks = map { _build_task( $_ ) } @{ $res };
 	return \@tasks;
+}
+
+sub update_list {
+	my ( $self, $list ) = @_;
+	
+	die 'No list specified.' unless $list;
+	die 'Not connected.' unless $self->connected;
+	
+	my $fetcher = $self->_fetcher;
+	my $res = $fetcher->request_update_list( $list );
+	
+	return $res ? 1 : 0;
 }
 
 sub _build_fetcher {

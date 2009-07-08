@@ -11,7 +11,7 @@ use JSON;
 use URI::Escape;
 use Data::Dumper;
 
-use Net::Google::Tasks::Task;
+use Net::Google::Tasks::Fetcher::Request;
 
 has 'login' => (
 	is => 'rw',
@@ -117,25 +117,28 @@ sub request_lists {
 	return $self->_initial_json->{ t }->{ lists };
 }
 
+sub request_update_list {
+	my ( $self, $list ) = @_;
+	
+	my $res = $self->_make_request(
+		Net::Google::Tasks::Fetcher::Request->request_update_list(
+			$self, $list->id, $list->name
+		)
+	);
+	
+	die 'Bad response: ' . $res->code if $res->is_error;
+
+	return 1;
+}
+
 sub request_tasks_for_list {
 	my ( $self, $list_id ) = @_;
 	
-	my $ua = $self->_ua;
-	my $v = $self->js_version;
-	my $id = $self->_request_count;
-	
-	my $res = $ua->request(
-		POST $self->addresses->{ ajax },
-		Referer => $self->addresses->{ base },
-		AT => 1,
-		Content => [
-			r => "{'action_list':[{'action_type':'get_all','action_id':'$id','list_id':'$list_id','get_deleted':false}],'client_version':$v}"
-		]
+	my $res = $self->_make_request(
+		Net::Google::Tasks::Fetcher::Request->request_tasks_for_list(
+			$self, $list_id
+		)
 	);
-
-	$self->_request_count( $id + 1 ); # TODO: Should we set regardless of error?
-	
-	die 'Bad response: ' . $res->code if $res->is_error;
 
 	my $hash = decode_json( $res->content );
 	return $hash->{ tasks };
@@ -150,6 +153,18 @@ sub _build_useragent {
 	$ua->cookie_jar({ file => "$ENV{HOME}/.cookies.txt" });
 	
 	return $ua;
+}
+
+sub _make_request {
+	my ( $self, $req ) = @_;
+	
+	my $res = $self->_ua->request( $req );
+	
+	$self->_request_count( $self->_request_count + 1 ); # TODO: Should we set regardless of error?-
+	
+	die 'Bad response: ' . $res->code if $res->is_error;
+	
+	return $res;
 }
 
 1;

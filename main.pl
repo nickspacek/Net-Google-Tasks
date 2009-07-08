@@ -20,11 +20,27 @@ ReadMode('restore');
 
 print "\nLoading tasks...\n";
 
-my $tasks = Net::Google::Tasks->new(
+my $t = Net::Google::Tasks->new(
 	login => $login,
 	password => $password
 );
 
-die "Couldn't connect." unless $tasks->connect;
+die "Couldn't connect." unless $t->connect;
 
-print Dumper( $tasks->get_lists );
+my $lists = $t->get_lists;
+die 'No lists' unless scalar @{ $lists };
+
+my $l = $lists->[0];
+my $tasks = $t->get_tasks_for_list( $l );
+die 'No tasks' unless scalar @{ $tasks };
+
+print "Current name: " . $l->name;
+print "New name: ";
+
+my $new_name = ReadLine(0);
+$new_name =~ s/\n//g;
+
+$l->name( $new_name );
+
+die "Couldn't update list." unless $t->update_list( $l );
+
