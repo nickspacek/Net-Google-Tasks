@@ -22,6 +22,27 @@ has 'id' => (
 	isa => 'Str',
 	required => 1
 );
+has '_manager' => (
+	is => 'ro',
+	isa => 'Net::Google::Tasks',
+	required => 1,
+	weak_ref => 1
+);
+
+=head1 METHODS
+
+=head2 tasks
+
+Uses the manager reference to get a reference to the array of Task
+objects for this list.
+
+=cut
+
+sub tasks {
+	my ( $self ) = @_;
+	
+	return $self->_manager->get_tasks_for_list( $self );
+}
 
 =head1 AUTHOR
 

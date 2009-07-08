@@ -27,6 +27,7 @@ your tasks, update them, etc.
 our $VERSION = '0.01';
 
 use Moose;
+use Net::Google::Tasks::Task;
 use Net::Google::Tasks::Fetcher;
 use Net::Google::Tasks::List;
 
@@ -74,7 +75,7 @@ sub get_lists {
 	my $fetcher = $self->_fetcher;
 	my $arr = $fetcher->request_lists;
 
-	my @lists = map { _build_list( $_ ) } @{ $arr };
+	my @lists = map { $self->_build_list( $_ ) } @{ $arr };
 	return \@lists;
 }
 
@@ -93,7 +94,7 @@ sub get_tasks_for_list {
 	my $fetcher = $self->_fetcher;
 	my $res = $fetcher->request_tasks_for_list( $list->id );
 	
-	my @tasks = map { _build_task( $_ ) } @{ $res };
+	my @tasks = map { $self->_build_task( $_ ) } @{ $res };
 	return \@tasks;
 }
 
@@ -126,16 +127,17 @@ sub _build_fetcher {
 }
 
 sub _build_list {
-	my $hash = shift;
+	my ( $self, $hash ) = @_;
 	
 	return Net::Google::Tasks::List->new(
 		id => $hash->{ id },
-		name => $hash->{ name }
+		name => $hash->{ name },
+		_manager => $self
 	);
 }
 
 sub _build_task {
-	my $hash = shift;
+	my ( $self, $hash ) = @_;
 	
 	return Net::Google::Tasks::Task->new(
 		id => $hash->{ id },
@@ -145,7 +147,8 @@ sub _build_task {
 #		completed_date => $hash->{ completed_date },
 		list_id => $hash->{ list_id },
 		deleted => _is_true( $hash->{ deleted } ),
-		archived => _is_true( $hash->{ archived } )
+		archived => _is_true( $hash->{ archived } ),
+		_manager => $self
 	);
 }
 

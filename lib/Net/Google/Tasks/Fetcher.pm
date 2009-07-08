@@ -148,7 +148,9 @@ Returns a reference to an array straight from the decoded JSON.
 
 sub request_lists {
 	my ( $self ) = @_;
-	# TODO: Have some POST request logic
+	
+	# redo original response
+	
 	return $self->_initial_json->{ t }->{ lists };
 }
 
@@ -173,6 +175,14 @@ sub request_update_list {
 	die 'Bad response: ' . $res->code if $res->is_error;
 
 	return 1;
+}
+
+sub mr {
+	my ( $self, $req ) = @_;
+	
+	return $self->_make_request(
+		Net::Google::Tasks::Fetcher::Request->test( $self, $req )
+	);
 }
 
 =head2 request_tasks_for_list

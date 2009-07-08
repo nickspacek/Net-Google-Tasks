@@ -40,6 +40,13 @@ sub request_update_list {
 	]);
 }
 
+sub test {
+	shift;
+	my ( $fetcher, $req ) = @_;
+	
+	return _base_request( $fetcher, [ r => $req ] );
+}
+
 sub _base_request {
 	my ( $fetcher, $params ) = @_;
 	
