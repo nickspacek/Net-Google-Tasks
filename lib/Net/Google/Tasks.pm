@@ -147,7 +147,6 @@ sub _build_task {
 #		completed_date => $hash->{ completed_date },
 		list_id => $hash->{ list_id },
 		deleted => _is_true( $hash->{ deleted } ),
-		archived => _is_true( $hash->{ archived } ),
 		_manager => $self
 	);
 }
