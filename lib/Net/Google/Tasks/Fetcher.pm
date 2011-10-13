@@ -38,8 +38,8 @@ has 'addresses' => (
 	is => 'rw',
 	isa => 'HashRef',
 	default => sub {{
-		base => 'http://mail.google.com/tasks/ig',
-		ajax => 'http://mail.google.com/tasks/r/ig'
+		base => 'https://mail.google.com/tasks/ig',
+		ajax => 'https://mail.google.com/tasks/r/ig'
 	}} # TODO: Defaults
 );
 has 'js_version' => (
@@ -110,9 +110,9 @@ sub connect {
 
 	$parser->parse( $fres->content );
 
-	die "Couldn't get redirect." unless $redirect;
+	# die "Couldn't get redirect." unless $redirect;
 
-	$req = HTTP::Request->new( GET => $redirect );
+	$req = HTTP::Request->new( GET => $self->addresses->{base} );
 	$res = $ua->request( $req );
 
 	die "Couldn't load tasks page." unless $res;
